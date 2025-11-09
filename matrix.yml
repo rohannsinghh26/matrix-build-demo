@@ -1,0 +1,35 @@
+name: Matrix Build with Artifacts
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        version: [14, 16, 18]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step Identifier
+      - name: matrix-63df1ce
+        run: echo "Building for version ${{ matrix.version }}"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
+
+      - name: Generate build artifact
+        run: echo "Build output for version ${{ matrix.version }}" > output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-63df1ce-v${{ matrix.version }}
+          path: output.txt
